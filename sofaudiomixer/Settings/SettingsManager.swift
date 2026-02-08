@@ -78,6 +78,10 @@ final class SettingsManager {
         var lockedInputDeviceUID: String? = nil  // User's preferred input device (for input lock feature)
         var pinnedApps: Set<String> = []  // Persistence identifiers of pinned apps
         var pinnedAppInfo: [String: PinnedAppInfo] = [:]  // Persistence identifier → app metadata
+        
+        // Audio Profiles (v1.1.0+)
+        var currentProfile: AudioProfile = .balanced
+        var savedProfiles: [SavedAudioProfile] = []
     }
 
     init(directory: URL? = nil) {
@@ -238,6 +242,68 @@ final class SettingsManager {
         SMAppService.mainApp.status == .enabled
     }
 
+    // MARK: - Audio Profiles
+
+    var currentProfile: AudioProfile {
+        settings.currentProfile
+    }
+
+    func setCurrentProfile(_ profile: AudioProfile) {
+        settings.currentProfile = profile
+        scheduleSave()
+        logger.info("Switched to profile: \(profile.rawValue)")
+    }
+
+    func getSavedProfiles() -> [SavedAudioProfile] {
+        settings.savedProfiles
+    }
+
+    func saveProfile(_ profile: SavedAudioProfile) {
+        let index = settings.savedProfiles.firstIndex { $0.name == profile.name }
+        if let index = index {
+            settings.savedProfiles[index] = profile
+            logger.info("Updated profile: \(profile.name)")
+        } else {
+            settings.savedProfiles.append(profile)
+            logger.info("Saved new profile: \(profile.name)")
+        }
+        scheduleSave()
+    }
+
+    func deleteProfile(_ profileName: String) {
+        settings.savedProfiles.removeAll { $0.name == profileName }
+        // If we deleted the current profile, switch to balanced
+        if settings.currentProfile.id == profileName {
+            settings.currentProfile = .balanced
+        }
+        logger.info("Deleted profile: \(profileName)")
+        scheduleSave()
+    }
+
+    func applyProfile(_ profile: AudioProfile, to appIdentifier: String? = nil) {
+        let settingsToApply = profile.getPresetAppVolumes()
+
+        if let appIdentifier = appIdentifier {
+            // Apply to specific app
+            if let volume = settingsToApply[appIdentifier] {
+                setVolume(for: appIdentifier, to: volume)
+            }
+        } else {
+            // Apply to all apps in the preset
+            for (bundleID, volume) in settingsToApply {
+                setVolume(for: bundleID, to: volume)
+            }
+        }
+
+        // Update app-wide settings for the profile
+        var newSettings = appSettings
+        newSettings.defaultNewAppVolume = profile.defaultNewAppVolume
+        newSettings.maxVolumeBoost = profile.maxVolumeBoost
+        updateAppSettings(newSettings)
+
+        logger.info("Applied profile \(profile.rawValue) settings")
+    }
+
     // MARK: - Reset All Settings
 
     /// Resets all per-app settings and app-wide settings to defaults
@@ -251,6 +317,8 @@ final class SettingsManager {
         settings.appSettings = AppSettings()
         settings.systemSoundsFollowsDefault = true
         settings.lockedInputDeviceUID = nil
+        settings.currentProfile = .balanced
+        settings.savedProfiles.removeAll()
 
         // Also unregister from launch at login
         try? SMAppService.mainApp.unregister()

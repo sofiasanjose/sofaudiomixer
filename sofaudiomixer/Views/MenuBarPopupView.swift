@@ -164,6 +164,12 @@ struct MenuBarPopupView: View {
 
     @ViewBuilder
     private var mainContent: some View {
+        // Audio Profiles section
+        ProfileSelectorView(audioEngine: audioEngine)
+
+        Divider()
+            .padding(.vertical, DesignTokens.Spacing.xs)
+
         // Devices section (tabbed: Output / Input)
         devicesSection
 
