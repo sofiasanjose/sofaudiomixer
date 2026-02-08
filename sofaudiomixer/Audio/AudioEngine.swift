@@ -303,11 +303,18 @@ final class AudioEngine {
     }
 
     func setVolume(for app: AudioApp, to volume: Float) {
-        volumeState.setVolume(for: app.id, to: volume, identifier: app.persistenceIdentifier)
+        let clampedVolume = max(0.0, min(4.0, volume)) // Ensure valid range
+        volumeState.setVolume(for: app.id, to: clampedVolume, identifier: app.persistenceIdentifier)
+        
+        // Ensure tap exists before setting volume
         if let deviceUID = appDeviceRouting[app.id] {
             ensureTapExists(for: app, deviceUID: deviceUID)
         }
-        taps[app.id]?.volume = volume
+        
+        // Safely set volume on existing tap
+        if let tap = taps[app.id] {
+            tap.volume = clampedVolume
+        }
     }
 
     func getVolume(for app: AudioApp) -> Float {
@@ -316,7 +323,11 @@ final class AudioEngine {
 
     func setMute(for app: AudioApp, to muted: Bool) {
         volumeState.setMute(for: app.id, to: muted, identifier: app.persistenceIdentifier)
-        taps[app.id]?.isMuted = muted
+        
+        // Safely set mute on existing tap
+        if let tap = taps[app.id] {
+            tap.isMuted = muted
+        }
     }
 
     func getMute(for app: AudioApp) -> Bool {

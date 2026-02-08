@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>LSUIElement</key>
-	<true/>
+	<false/>
 	<key>NSAudioCaptureUsageDescription</key>
-	<string>SoAudioMixer needs access to control volume levels for individual applications.</string>
+	<string>sofaudiomixer needs access to control volume levels for individual applications.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
