@@ -125,8 +125,8 @@ enum DesignTokens {
     // MARK: - Typography
 
     enum Typography {
-        /// Section header text (e.g., "OUTPUT DEVICES") - prominent and bold
-        static let sectionHeader = Font.system(size: 12, weight: .bold)
+        /// Section header text (e.g., "OUTPUT DEVICES")
+        static let sectionHeader = Font.system(size: 12, weight: .regular)
 
         /// Section header letter spacing (tighter at larger size)
         static let sectionHeaderTracking: CGFloat = 1.2
@@ -134,8 +134,8 @@ enum DesignTokens {
         /// App/device name in rows
         static let rowName = Font.system(size: 13, weight: .regular)
 
-        /// Bold variant for default device name
-        static let rowNameBold = Font.system(size: 13, weight: .semibold)
+        /// Regular variant for device names
+        static let rowNameBold = Font.system(size: 13, weight: .regular)
 
         /// Volume percentage display
         static let percentage = Font.system(size: 11, weight: .medium, design: .monospaced)
