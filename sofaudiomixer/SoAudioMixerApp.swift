@@ -86,8 +86,11 @@ struct SoAudioMixerApp: App {
         // Pass engine to AppDelegate
         _appDelegate.wrappedValue.audioEngine = engine
 
-        // Initialize keyboard shortcuts manager
-        _keyboardShortcuts = State(initialValue: KeyboardShortcutsManager(audioEngine: engine))
+        // Initialize keyboard shortcuts manager AFTER audio engine is ready
+        // Delayed initialization to prevent race conditions
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let _ = KeyboardShortcutsManager(audioEngine: engine)
+        }
 
         // Capture icon style at launch - requires restart to change
         let iconStyle = settings.appSettings.menuBarIconStyle

@@ -19,14 +19,32 @@ final class KeyboardShortcutsManager {
     
     private func setupGlobalShortcuts() {
         // Register for system-wide keyboard events
-        eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            self?.handleKeyDown(event)
+        // Safely handle any initialization errors
+        do {
+            eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
+                guard let self = self else { return }
+                // Wrap in autoreleasepool to prevent memory buildup from frequent events
+                autoreleasepool {
+                    self.handleKeyDown(event)
+                }
+            }
+            
+            guard eventMonitor != nil else {
+                logger.warning("Failed to register global keyboard monitor")
+                return
+            }
+            
+            logger.info("Global keyboard shortcuts registered successfully")
+        } catch {
+            logger.error("Error setting up global keyboard shortcuts: \(error)")
         }
-        logger.info("Global keyboard shortcuts registered")
     }
     
     private func handleKeyDown(_ event: NSEvent) {
         guard isEnabled, let audioEngine = audioEngine else { return }
+        
+        // Safe guard: ensure we can access settings manager
+        guard audioEngine.settingsManager != nil else { return }
         
         let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
         let hasCmd = modifiers.contains(.command)
@@ -46,23 +64,18 @@ final class KeyboardShortcutsManager {
             case "1":
                 audioEngine.settingsManager.setCurrentProfile(.gaming)
                 audioEngine.settingsManager.applyProfile(.gaming)
-                logger.info("Profile switched to Gaming")
             case "2":
                 audioEngine.settingsManager.setCurrentProfile(.streaming)
                 audioEngine.settingsManager.applyProfile(.streaming)
-                logger.info("Profile switched to Streaming")
             case "3":
                 audioEngine.settingsManager.setCurrentProfile(.music)
                 audioEngine.settingsManager.applyProfile(.music)
-                logger.info("Profile switched to Music")
             case "4":
                 audioEngine.settingsManager.setCurrentProfile(.calls)
                 audioEngine.settingsManager.applyProfile(.calls)
-                logger.info("Profile switched to Calls")
             case "5":
                 audioEngine.settingsManager.setCurrentProfile(.balanced)
                 audioEngine.settingsManager.applyProfile(.balanced)
-                logger.info("Profile switched to Balanced")
             default:
                 break
             }
@@ -77,7 +90,6 @@ final class KeyboardShortcutsManager {
             let nextProfile = allProfiles[nextIndex]
             audioEngine.settingsManager.setCurrentProfile(nextProfile)
             audioEngine.settingsManager.applyProfile(nextProfile)
-            logger.info("Profile cycled to \(nextProfile.rawValue)")
         }
     }
     

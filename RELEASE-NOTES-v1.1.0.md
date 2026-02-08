@@ -4,32 +4,32 @@
 **Version:** 1.1.0  
 **Status:** Stable
 
-## 🎉 What's New
+## What's New
 
-### Audio Profiles System 🎯
+### Audio Profiles System
 Introducing **Audio Profiles** - a powerful feature that lets you quickly switch between pre-configured audio settings optimized for different use cases:
 
-- **🎮 Gaming**: Optimized for immersive gaming
+- **Gaming**: Optimized for immersive gaming
   - System audio: 80% (boost game audio)
   - Apps: 30% (minimize distractions)
   - EQ: Bass boost for immersion
   
-- **📹 Streaming**: Perfect for content creators
+- **Streaming**: Perfect for content creators
   - System audio: 70% (balanced)
   - Apps: 50% (moderate)
   - EQ: Vocal clarity for clear commentary
   
-- **🎵 Music**: For music enthusiasts
+- **Music**: For music enthusiasts
   - System audio: 90% (maximize quality)
   - Apps: 50% (balanced)
   - EQ: Flat response (preserve original audio)
   
-- **☎️ Calls**: Optimized for communication
+- **Calls**: Optimized for communication
   - System audio: 60% (reduced volume)
   - Apps: 0% (muted - focus on call)
   - EQ: Vocal clarity for clear speech
   
-- **⚖️ Balanced**: Standard settings
+- **Balanced**: Standard settings
   - System audio: 70% (standard)
   - Apps: 50% (standard)
   - EQ: Flat response
@@ -40,7 +40,7 @@ Introducing **Audio Profiles** - a powerful feature that lets you quickly switch
 - One-click profile application to all apps
 - Keyboard shortcuts for power users (see below)
 
-### Global Keyboard Shortcuts ⌨️
+### Global Keyboard Shortcuts
 
 New keyboard shortcuts for power users:
 
@@ -49,31 +49,31 @@ New keyboard shortcuts for power users:
 - Works globally - doesn't require menu bar visible
 - Perfect for quick context switching
 
-### Bug Fixes 🐛
+### Bug Fixes
 
 #### Critical Fixes from v1.0.1
 
-1. **App Registration Fix** ⭐
+1. **App Registration Fix**
    - App now properly registers with macOS
    - Shows in Force Quit dialog (Cmd+Option+Esc)
    - Fixes: "App appears frozen but can't quit" issue
    
-2. **Volume Change Stability** ⭐
+2. **Volume Change Stability**
    - Fixed crashes when adjusting volume sliders
    - Added safety checks and volume clamping
    - Prevents invalid volume values (0.0-4.0 range enforced)
    
-3. **Settings Change Stability** ⭐
+3. **Settings Change Stability**
    - Fixed crashes when changing app settings
    - Implemented optional chaining for safer state management
    - All settings updates now stable
 
-4. **DMG Installer Improvements** ⭐
+4. **DMG Installer Improvements**
    - DMG now shows Applications folder
    - Proper drag-and-drop installation support
    - Professional installer layout
 
-## 📊 Technical Details
+## Technical Details
 
 ### Changed Files
 - **Models**: New `AudioProfile.swift` with complete profile system
@@ -92,25 +92,25 @@ New keyboard shortcuts for power users:
 - No audio interruption when switching profiles
 - Memory efficient profile system
 
-## 🔒 Security & Stability
+## Security and Stability
 
 - **Ad-hoc Code Signing**: Maintain local-only signing (users right-click → Open once)
 - **Crash Fixes**: All identified crash scenarios resolved
 - **Memory Safety**: No unsafe pointers or force unwrapping in critical paths
 - **Audio Safety**: Volume clamping prevents system damage
 
-## 📝 Development Notes
+## Development Notes
 
 Commits in this release:
 - `452cc86` - v1.1.0: Critical bug fixes (app registration, volume changes, proper DMG)
 - `246d597` - feat: Add audio profile system (Gaming/Streaming/Music/Calls)
 - `348ab86` - feat: Add global keyboard shortcuts for profiles
 
-## 🙏 Credits
+## Credits
 
 **sofaudiomixer** v1.1.0 is built on the excellent **FineTune** codebase by Ronit Singh, with significant enhancements for stability and user experience.
 
-## 📦 Distribution
+## Distribution
 
 **Download:** [sofaudiomixer-v1.1.0.dmg](https://github.com/sofiasanjose/sofaudiomixer/releases/download/v1.1.0/sofaudiomixer-v1.1.0.dmg)
 
@@ -120,11 +120,11 @@ Commits in this release:
 3. Run sofaudiomixer from Applications
 4. Right-click → Open (first launch only, due to ad-hoc signing)
 
-## 🐛 Known Issues
+## Known Issues
 
 None identified - please report any issues on GitHub!
 
-## 📈 Roadmap
+## Roadmap
 
 Potential future features being considered:
 - Audio routing profiles (route specific apps to different devices)
@@ -132,7 +132,7 @@ Potential future features being considered:
 - MIDI controller support for profile switching
 - Cloud sync for saved profiles
 
-## 📞 Support
+## Support
 
 For issues, feature requests, or questions:
 - Open an issue on GitHub: https://github.com/sofiasanjose/sofaudiomixer/issues
@@ -140,4 +140,4 @@ For issues, feature requests, or questions:
 
 ---
 
-**Happy audio mixing! 🥭**
+Happy audio mixing!
