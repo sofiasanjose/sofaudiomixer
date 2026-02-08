@@ -15,15 +15,15 @@ enum AudioProfile: String, CaseIterable, Identifiable, Codable {
     var displayName: String {
         switch self {
         case .gaming:
-            return "🎮 Gaming"
+            return "Gaming"
         case .streaming:
-            return "📹 Streaming"
+            return "Streaming"
         case .music:
-            return "🎵 Music"
+            return "Music"
         case .calls:
-            return "☎️ Calls"
+            return "Calls"
         case .balanced:
-            return "⚖️ Balanced"
+            return "Balanced"
         }
     }
     
