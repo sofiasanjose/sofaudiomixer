@@ -166,15 +166,11 @@ struct MenuBarPopupView: View {
     private var mainContent: some View {
         // Audio Profiles section
         ProfileSelectorView(audioEngine: audioEngine)
-
-        Divider()
-            .padding(.vertical, DesignTokens.Spacing.xs)
+            .padding(.bottom, DesignTokens.Spacing.sm)
 
         // Devices section (tabbed: Output / Input)
         devicesSection
-
-        Divider()
-            .padding(.vertical, DesignTokens.Spacing.xs)
+            .padding(.vertical, DesignTokens.Spacing.sm)
 
         // Apps section (active + pinned inactive)
         if audioEngine.displayableApps.isEmpty {
