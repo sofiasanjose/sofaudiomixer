@@ -27,6 +27,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 struct SoAudioMixerApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var audioEngine: AudioEngine
+    @State private var keyboardShortcuts: KeyboardShortcutsManager?
     @State private var showMenuBarExtra = true
 
     /// Icon style captured at launch (doesn't change during runtime)
@@ -84,6 +85,9 @@ struct SoAudioMixerApp: App {
 
         // Pass engine to AppDelegate
         _appDelegate.wrappedValue.audioEngine = engine
+
+        // Initialize keyboard shortcuts manager
+        _keyboardShortcuts = State(initialValue: KeyboardShortcutsManager(audioEngine: engine))
 
         // Capture icon style at launch - requires restart to change
         let iconStyle = settings.appSettings.menuBarIconStyle
