@@ -30,6 +30,14 @@ struct ProfileSelectorView: View {
             }
             .padding(.horizontal, DesignTokens.Spacing.xs)
             .padding(.vertical, 6)
+
+            // Profile Description
+            Text(audioEngine.settingsManager.currentProfile.description)
+                .font(.system(.caption2, design: .rounded))
+                .foregroundColor(.secondary)
+                .lineLimit(1)
+                .padding(.horizontal, DesignTokens.Spacing.sm)
+                .padding(.bottom, 4)
         }
         .padding(DesignTokens.Spacing.sm)
         .background(Color.black.opacity(0.2))
