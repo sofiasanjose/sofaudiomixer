@@ -9,8 +9,16 @@ struct ProfileSelectorView: View {
             SectionHeader(title: "Audio Profile")
                 .padding(.bottom, DesignTokens.Spacing.xs)
 
-            ForEach(AudioProfile.allCases, id: \.self) { profile in
-                profileRow(for: profile)
+            // Compact profile grid
+            VStack(spacing: DesignTokens.Spacing.xs) {
+                ForEach(AudioProfile.allCases.chunked(into: 2), id: \.self) { row in
+                    HStack(spacing: DesignTokens.Spacing.xs) {
+                        ForEach(row, id: \.self) { profile in
+                            profileButton(for: profile)
+                        }
+                        Spacer()
+                    }
+                }
             }
 
             // Profile Description
@@ -18,36 +26,43 @@ struct ProfileSelectorView: View {
                 .font(DesignTokens.Typography.caption)
                 .foregroundColor(DesignTokens.Colors.textTertiary)
                 .lineLimit(1)
-                .padding(.horizontal, DesignTokens.Spacing.md)
                 .padding(.top, DesignTokens.Spacing.xs)
         }
     }
 
-    private func profileRow(for profile: AudioProfile) -> some View {
+    private func profileButton(for profile: AudioProfile) -> some View {
         Button(action: {
             audioEngine.settingsManager.setCurrentProfile(profile)
             audioEngine.settingsManager.applyProfile(profile)
         }) {
-            HStack(spacing: DesignTokens.Spacing.md) {
-                // Radio button indicator
+            HStack(spacing: 6) {
                 Image(systemName: audioEngine.settingsManager.currentProfile == profile ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 14, weight: .regular))
+                    .font(.system(size: 12, weight: .regular))
                     .symbolRenderingMode(.hierarchical)
                     .foregroundStyle(audioEngine.settingsManager.currentProfile == profile ? 
                                    DesignTokens.Colors.interactiveDefault : 
                                    DesignTokens.Colors.textTertiary)
-                    .frame(width: DesignTokens.Dimensions.settingsIconWidth, alignment: .center)
 
-                // Profile name
                 Text(profile.rawValue)
                     .font(DesignTokens.Typography.rowName)
                     .foregroundStyle(DesignTokens.Colors.textPrimary)
-
-                Spacer()
             }
-            .padding(.horizontal, DesignTokens.Spacing.md)
-            .padding(.vertical, DesignTokens.Spacing.sm)
-            .hoverableRow()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, DesignTokens.Spacing.sm)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: DesignTokens.Dimensions.buttonRadius)
+                    .fill(Color.white.opacity(audioEngine.settingsManager.currentProfile == profile ? 0.1 : 0.05))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: DesignTokens.Dimensions.buttonRadius)
+                    .strokeBorder(
+                        audioEngine.settingsManager.currentProfile == profile ?
+                        DesignTokens.Colors.interactiveDefault.opacity(0.3) :
+                        Color.white.opacity(0.1),
+                        lineWidth: 0.5
+                    )
+            )
         }
         .buttonStyle(.plain)
     }
@@ -59,4 +74,14 @@ struct ProfileSelectorView: View {
     ProfileSelectorView(audioEngine: AudioEngine())
         .preferredColorScheme(.dark)
         .frame(width: 300)
+}
+
+// MARK: - Helper for Array chunking
+
+extension Array {
+    func chunked(into size: Int) -> [[Element]] {
+        stride(from: 0, to: count, by: size).map {
+            Array(self[$0..<Swift.min($0 + size, count)])
+        }
+    }
 }
