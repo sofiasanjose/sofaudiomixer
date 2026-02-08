@@ -1,8 +1,4 @@
-<p align="center">
-  <img src="assets/icon.png" width="128" height="128" alt="SoAudioMixer app icon">
-</p>
-
-<h1 align="center">SoAudioMixer 🥭</h1>
+<h1 align="center">🥭 SoAudioMixer</h1>
 
 <p align="center">
   <strong>Per-app volume control for macOS</strong>
@@ -23,10 +19,6 @@
 </p>
 
 ---
-
-<p align="center">
-  <img src="assets/screenshot-main.png" alt="SoAudioMixer showing per-app volume control" width="750">
-</p>
 
 ## 💡 About SoAudioMixer
 
@@ -91,6 +83,142 @@ open sofaudiomixer.xcodeproj
 ```
 
 Press **Cmd+R** to build and run.
+
+## 📦 Distribution for Public Use
+
+### For Users (Download & Install)
+
+**Coming Soon:** Pre-built releases will be available on the [GitHub Releases](https://github.com/sofiasanjose/sofaudiomixer/releases) page.
+
+Once available:
+1. Download the latest `.dmg` file
+2. Open the DMG and drag SoAudioMixer to Applications
+3. Launch from Applications folder
+4. Grant audio permissions when prompted
+
+### For Developers (Building for Distribution)
+
+To make SoAudioMixer available for public download, you need to properly sign and notarize the app:
+
+#### Prerequisites
+
+1. **Apple Developer Program** ($99/year)
+   - Enroll at [developer.apple.com](https://developer.apple.com/programs/)
+   - Required for code signing certificates and notarization
+
+2. **Developer ID Certificate**
+   - Log into [developer.apple.com/account](https://developer.apple.com/account)
+   - Go to "Certificates, Identifiers & Profiles"
+   - Create a new "Developer ID Application" certificate
+   - Download and install in Keychain Access
+
+#### Build & Sign Process
+
+**1. Update Code Signing in Xcode**
+```
+1. Open sofaudiomixer.xcodeproj
+2. Select project in navigator → sofaudiomixer target
+3. Go to "Signing & Capabilities" tab
+4. Uncheck "Automatically manage signing"
+5. Select your "Developer ID Application" certificate
+6. Set Provisioning Profile to "None"
+```
+
+**2. Build Release Version**
+```bash
+xcodebuild -project sofaudiomixer.xcodeproj \
+  -scheme sofaudiomixer \
+  -configuration Release \
+  -derivedDataPath build \
+  CODE_SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" \
+  clean build
+```
+
+**3. Create DMG Installer**
+```bash
+# Use the included build script
+./scripts/build-dmg.sh
+```
+
+Or manually with `create-dmg`:
+```bash
+brew install create-dmg
+
+create-dmg \
+  --volname "SoAudioMixer" \
+  --window-pos 200 120 \
+  --window-size 600 400 \
+  --icon-size 100 \
+  --app-drop-link 450 185 \
+  "SoAudioMixer.dmg" \
+  "build/Build/Products/Release/sofaudiomixer.app"
+```
+
+**4. Notarize the App**
+
+```bash
+# Store credentials (one-time setup)
+xcrun notarytool store-credentials "AC_PASSWORD" \
+  --apple-id "your@email.com" \
+  --team-id "TEAMID" \
+  --password "app-specific-password"
+
+# Submit for notarization
+xcrun notarytool submit SoAudioMixer.dmg \
+  --keychain-profile "AC_PASSWORD" \
+  --wait
+
+# Staple notarization ticket
+xcrun stapler staple SoAudioMixer.dmg
+```
+
+**5. Verify Notarization**
+```bash
+spctl --assess --type open --context context:primary-signature -v SoAudioMixer.dmg
+```
+
+Should show: `SoAudioMixer.dmg: accepted`
+
+**6. Publish Release**
+
+1. Create a new release on GitHub
+2. Upload the notarized `SoAudioMixer.dmg`
+3. Add release notes with features and changes
+4. Tag the release (e.g., `v1.0.0`)
+
+#### Alternative: Distribution via GitHub Only
+
+If you don't want to pay for Apple Developer Program:
+
+⚠️ **Users will need to:**
+1. Download the app
+2. Right-click → Open (first time only)
+3. Click "Open" in the security warning
+4. macOS Gatekeeper will block normal double-click
+
+**To enable this:**
+- Keep "Sign to Run Locally" in Xcode
+- Users must bypass Gatekeeper manually
+- Not recommended for public distribution
+
+#### Automated Releases (Optional)
+
+The included `.github/workflows/release.yml` can automate builds:
+
+1. Add secrets to GitHub repo:
+   - `APPLE_ID`
+   - `APPLE_APP_PASSWORD`
+   - `APPLE_TEAM_ID`
+   - `CERTIFICATES_P12` (base64-encoded Developer ID cert)
+   - `CERT_PASSWORD`
+
+2. Push a git tag to trigger build:
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+3. GitHub Actions will build, sign, notarize, and create release automatically
 
 ## 📦 Architecture
 
