@@ -183,9 +183,6 @@ struct MenuBarPopupView: View {
             appsSection
         }
 
-        Divider()
-            .padding(.vertical, DesignTokens.Spacing.xs)
-
         // Quit button
         HStack {
             Spacer()
