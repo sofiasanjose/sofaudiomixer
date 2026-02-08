@@ -20,7 +20,6 @@ struct SettingsView: View {
                 generalSection
                 audioSection
                 notificationsSection
-                keyboardShortcutsSection
                 dataSection
 
                 aboutFooter
@@ -109,11 +108,7 @@ struct SettingsView: View {
         }
     }
 
-    // MARK: - Keyboard Shortcuts Section
 
-    private var keyboardShortcutsSection: some View {
-        KeyboardShortcutsSettingsView()
-    }
 
     // MARK: - Data Section
 
