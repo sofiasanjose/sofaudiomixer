@@ -35,7 +35,7 @@ cp -R "$APP_PATH" "$TEMP_DMG/"
 ln -s /Applications "$TEMP_DMG/Applications"
 
 # Create DMG
-OUTPUT_DMG="$HOME/Desktop/sofaudiomixer-v1.1.0.dmg"
+OUTPUT_DMG="$HOME/Desktop/sofaudiomixer-v1.2.0.dmg"
 rm -f "$OUTPUT_DMG"
 
 echo "==> Creating DMG installer..."
