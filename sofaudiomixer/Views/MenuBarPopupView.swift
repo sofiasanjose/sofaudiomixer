@@ -635,9 +635,6 @@ struct MenuBarPopupView: View {
                 )
             }
 
-            Divider()
-                .padding(.vertical, DesignTokens.Spacing.xs)
-
             Button("Quit sofaudiomixer") {}
                 .buttonStyle(.plain)
                 .foregroundStyle(DesignTokens.Colors.textTertiary)
