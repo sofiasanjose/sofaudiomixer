@@ -25,7 +25,7 @@ struct SettingsToggleRow: View {
         SettingsToggleRow(
             icon: "power",
             title: "Launch at Login",
-            description: "Start SoAudioMixer when you log in",
+            description: "Start sofaudiomixer when you log in",
             isOn: .constant(true)
         )
 

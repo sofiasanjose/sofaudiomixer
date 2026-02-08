@@ -183,7 +183,7 @@ struct MenuBarPopupView: View {
         // Quit button
         HStack {
             Spacer()
-            Button("Quit SoAudioMixer") {
+            Button("Quit sofaudiomixer") {
                 NSApplication.shared.terminate(nil)
             }
             .buttonStyle(.plain)
@@ -632,7 +632,7 @@ struct MenuBarPopupView: View {
             Divider()
                 .padding(.vertical, DesignTokens.Spacing.xs)
 
-            Button("Quit SoAudioMixer") {}
+            Button("Quit sofaudiomixer") {}
                 .buttonStyle(.plain)
                 .foregroundStyle(DesignTokens.Colors.textTertiary)
                 .font(DesignTokens.Typography.caption)
